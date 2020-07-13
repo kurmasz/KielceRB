@@ -1,0 +1,10 @@
+@instance_a = 'first'
+@instance_b = 19
+
+def say_hi
+ "Hello"
+ end
+
+{
+  a: 44
+}

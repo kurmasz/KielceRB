@@ -1,0 +1,7 @@
+Testing module system from file
+<%
+  require_relative '../modules/test_module1'
+  obj = KielceTestModule1::KielceTestClass1.new
+%>
+Get ready:
+<%= obj.say_something %>

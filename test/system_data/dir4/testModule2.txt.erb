@@ -1,0 +1,7 @@
+Testing module system from file using data for root
+<%
+  require_relative "#{$d.modules_root}/test_module2"
+  obj = KielceTestModule2::KielceTestClass2.new
+%>
+Get ready:
+<%= obj.bark %>

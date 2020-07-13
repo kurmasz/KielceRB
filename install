@@ -1,0 +1,10 @@
+# Rather than use traditional Gem 
+
+# copy the main executable and any plugins into the ~/bin directory
+
+dir=`dirname $0`
+
+cd ${dir}/lib
+
+cp kielce.rb ~/bin
+rsync -rRlzp kielce_plugins ~/bin

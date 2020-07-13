@@ -1,0 +1,39 @@
+* Make gemspec description longer
+
+* Is there a test for "no such key" when error is in a function instead of directly in erb?
+
+* Add system to verify that "KielceData" directories get read.
+
+* Move all code into one file.  Run using “Kielce d”, “Kielce t”, etc.  (Can make short-cuts using aliases)
+
+* Move config info into a file co-located with the executable (default target, semester boundaries, etc.)
+
+* Perhaps that config file should be in Kielce format itself???
+
+* Make sure deploys can be done from different directories
+
+* When does change to assignment necessitate change to main web page?
+
+* Easy way to copy all static files to staging (everything except --- perhaps done with rsync)
+
+* What was the purpose of kielce_module?
+
+* When rendering the ERB template, should we send the data to a special object and use that context?
+
+* When there is an error in KielceData try to print a line number.
+
+* Nested includes should work relative to the included file (or we need render relative)
+
+* What should we do with errors in nested render?
+
+# TODO Consider using e.backtrace_locations instead of @file_stack
+# (Question: What exaclty do you want to see if render_relative is called
+# by a method)
+
+=============
+
+Documentation:
+
+* Change file pattern for data files (default is kielce_data*.rb): QZ001
+
+* Objects created inside lambdas are in a different scope than methods created in the kielce_data files outside of the hashes.
