@@ -1,8 +1,9 @@
 require "open3"
 
 module SystemTestHelper
-  KIELCE_COMMAND = "ruby -I lib bin/kielce"
-  VERSION = /KielceRB\s+\(version 2.0\)\n/
+  KIELCE_COMMAND = "ruby -I lib bin/kielce" # test dev
+  # KIELCE_COMMAND = 'kielce' # test installed gem
+  VERSION = /KielceRB\s+\(version 2.0.0\)\n/
   SUCCESS = 0
   ERROR = 1
 
