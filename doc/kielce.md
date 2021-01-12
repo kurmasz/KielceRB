@@ -1,0 +1,124 @@
+# KielceRB
+
+`KielceRB` is a highly customizable templating engine for generating assignments, syllabi, web pages and other course documents.  It loads a hierarchy of key-value pairs from files at various file system levels.  These values can them be inserted into documents using Ruby's ERB templating engine. `KielceRB` simplifies the maintenance of course documents by moving data that changes regularly into external data files where they can be easily identified and updated.  By loading data from various file system levels, it is easy to share values among all documents for a particular course and/or semester. 
+
+## Simple Example
+
+Data files are Ruby files that return a hash containing the key-value pairs. Their names must mach the pattern `kielce_data*.rb`.
+
+``` ruby
+{
+  semester: 'Fall',
+  year: '2020',
+  credit_hours: 12
+}
+```
+
+Values from these hashes can be inserted into documents using Ruby's ERB syntax: 
+
+```erb
+<html>
+   <body>
+      <h1>Computer Science 1 <%= $d.semester %> <%= $d.year %>
+      ...
+```
+
+Notice that the hash returned by the data file is converted to an object for which each key in the hash is now a method (hence the method-call syntax above as opposed to "square-bracket" syntax used by a plain Hash).  This object is placed in the global variable `$d`.
+
+The simplest use case is:
+
+1. Create a data file named `kielce_data.rb`.
+2. Create an erb file using the data (let's call it `my_file.html.erb`)
+3. Run `kielce my_file.html.erb > my_file.html`
+
+## Intermediate Features
+
+### Hierarchical data
+
+The values in the data files can any type of Ruby object (including nested Hashes)
+
+```ruby 
+{
+  course: {
+    name: 'Computer Science I',
+    code: 'CIS 162',
+    exam_dates: {
+      midterm: Date.new(2020, 10, 22)
+      final: Date.new(2020, 12, 14))
+    }
+  },
+
+  semester: {
+    term: 'Fall',
+    year: '2020'
+  },
+
+  general: {
+    office_hours: ['Monday 10:00 - 11:00', 'Thursday 2:00 - 3:00']
+  }
+}
+```
+
+Nested hashes are converted into objects just as the root hash is.  Thus, the syntax for accessing the term is `<%= $d.semester.term %>`.  
+
+Objects that are not hashes are simply returned.  Thus, one could use the following to display the final exam date: 
+`<%= $d.exam_dates.final.strftime("%A, %-d %B %Y")>`
+
+Note: Only directly nested hashes are converted to objects.
+
+```ruby
+{
+  # Note:  KielceRB will *not* convert the hashes in the array to objects.
+  books: [{
+    author: 'Homer',
+    name: 'Odyssey'
+  },
+  {
+    author: 'Chaucer',
+    name: 'Canterbury Tales'
+  }]
+}
+```
+
+### Functions
+
+The values in the data file may be functions (i.e., Ruby Lambdas):
+
+```ruby
+{
+  semester: {
+    term: 'Fall',
+    year: '2020',
+    full_name: () -> {"#{term} #{year}"}
+  }
+}
+```
+
+Referencing the key calls the function: `<%= $d.semester.full_name %>`
+
+Notice in the example above that other keys in the same hash may be referenced without qualification.  Keys in other objects can be referenced using the `root` method:
+
+```ruby 
+{
+  course: {
+    name: 'Computer Science I',
+    full_name: () -> {"#{name} #{root.semester.term} #{root.semester.year}"}
+  },
+
+  semester: {
+    term: 'Fall',
+    year: '2020'  
+  }
+}
+```
+
+Functions may take parameters:
+
+
+### Data File Hierarchy
+
+`KielceRB` searches for multiple data files.  Specifically, it begins in the directory containing the source file and searches each ancestor directory for files matching the pattern `kielce_data*rb`.  The data in these files are merged 
+
+
+
+

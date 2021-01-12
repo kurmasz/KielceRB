@@ -60,7 +60,13 @@ module Kielce
     # @param the file
     # @param b the binding that the template code runs in.
     # @return a +String+ containing the rendered contents
-    def render(file, b = @data_context.instance_exec { binding })
+    def render(file, local_variables = {}, b = @data_context.instance_exec { binding })
+
+      local_variables.each_pair do |key, value|
+        b.local_variable_set(key, value)
+      end
+
+      # $stderr.puts "In render: #{b.inspect}"
       result = "<!--- ERROR -->"
 
       begin
@@ -99,9 +105,9 @@ module Kielce
       result
     end
 
-    def render_relative(file, b = @data_context.instance_exec { binding })
+    def render_relative(file, local_variables = {}, b = @data_context.instance_exec { binding })
       path = Pathname.new(File.absolute_path(@file_stack.last)).dirname
-      render(path.join(file), b)
+      render(path.join(file), local_variables, b)
     end
   end
 end

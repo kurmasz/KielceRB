@@ -1,0 +1,6 @@
+* When loading and rendering, the same context object is used by default.  
+  That means that instance variables and methods set in one kielce_data file
+  are available in other files as well as when rendering erb.
+  However, a new binding is requested during each method call, so 
+  local variables set during one load/render are not available for 
+  subsequent loads/renders

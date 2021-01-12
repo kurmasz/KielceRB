@@ -8,7 +8,8 @@ module KielcePlugins
 
     class Schedule
 
-      SCHEDULE_KEYS = [:week, :date, :topics, :notes, :reading, :milestones, :comments]
+      #SCHEDULE_KEYS = [:week, :date, :topics, :notes, :reading, :milestones, :comments]
+      SCHEDULE_KEYS = [:week, :date, :topics, :reading, :milestones, :comments]
 
       attr_accessor :assignments, :schedule_days
 
@@ -165,7 +166,7 @@ module KielcePlugins
         <th>Week</th>
         <th>Date</th>
         <th>Topics</th>
-        <th>Notes</th>
+        <!-- <th>Notes</th> -->
         <th>Reading</th>
         <th>Milestones</th>
        </tr>
@@ -192,7 +193,7 @@ TABLE
           formatted_date = schedule_day[:date].strftime("%a. %-d %b.")
           table << "  <td class='date_column'>#{formatted_date}</td>"
           table << "  <td class='topics_column'>#{schedule_day[:topics].join("<br>")}</td>"
-          table << "  <td class='topics_column'>#{schedule_day[:notes].join("<br>")}</td>"
+          # table << "  <td class='topics_column'>#{schedule_day[:notes].join("<br>")}</td>"
           table << "  <td class='reading_column'>#{schedule_day[:reading].join("<br>")}</td>"
           table << "  <td class='milestones_column'>#{schedule_day[:milestones].join("<br>")}</td>"
           table << "</tr>"

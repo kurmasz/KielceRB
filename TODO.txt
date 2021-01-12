@@ -27,13 +27,19 @@
 * What should we do with errors in nested render?
 
 # TODO Consider using e.backtrace_locations instead of @file_stack
-# (Question: What exaclty do you want to see if render_relative is called
+# (Question: What exactly do you want to see if render_relative is called
 # by a method)
 
+* Add system test showing that local variables set in kielce_data files and/or .erb files 
+  do not appear in subsequent files/renders
+
+* Test the local_variable parameter option to render
+
+* Test whether local variables hide/shadow methods defined on the context
 =============
 
 Documentation:
 
-* Change file pattern for data files (default is kielce_data*.rb): QZ001
+* Change file pattern for data  files (default is kielce_data*.rb): QZ001
 
 * Objects created inside lambdas are in a different scope than methods created in the kielce_data files outside of the hashes.

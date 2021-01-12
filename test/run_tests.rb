@@ -1,3 +1,5 @@
+# Note:  Run this file from the directory above (i.e., the root of the project)
+
 # from https://test-unit.github.io/test-unit/en/file.how-to.html
 
 $debug = false
