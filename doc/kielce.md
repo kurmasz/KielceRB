@@ -1,10 +1,10 @@
 # KielceRB
 
-`KielceRB` is a highly customizable templating engine for generating assignments, syllabi, web pages and other course documents.  It loads a hierarchy of key-value pairs from files at various file system levels.  These values can them be inserted into documents using Ruby's ERB templating engine. `KielceRB` simplifies the maintenance of course documents by moving data that changes regularly into external data files where they can be easily identified and updated.  By loading data from various file system levels, it is easy to share values among all documents for a particular course and/or semester. 
+`KielceRB` is a highly customizable templating engine for generating assignments, syllabi, web pages and other course documents.  It loads a hierarchy of key-value pairs from files at various file system levels.  These values can then be inserted into documents using Ruby's ERB templating engine. `KielceRB` simplifies the maintenance of course documents by moving data that changes regularly into external data files where they can be easily identified and updated.  By loading data from various file system levels, it is easy to share values among all documents for a particular course and/or semester. 
 
 ## Simple Example
 
-Data files are Ruby files that return a hash containing the key-value pairs. Their names must mach the pattern `kielce_data*.rb`.
+Data files are Ruby files that return a hash containing key-value pairs. The names of these files must mach the pattern `kielce_data*.rb`.
 
 ``` ruby
 {
@@ -28,7 +28,7 @@ Notice that the hash returned by the data file is converted to an object for whi
 The simplest use case is:
 
 1. Create a data file named `kielce_data.rb`.
-2. Create an erb file using the data (let's call it `my_file.html.erb`)
+2. Create an <code>erb</code> file using the data (let's call it `my_file.html.erb`)
 3. Run `kielce my_file.html.erb > my_file.html`
 
 ## Intermediate Features
