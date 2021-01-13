@@ -70,7 +70,7 @@ Nested hashes are converted into objects just as the root hash is.  Thus, the sy
 Objects that are not hashes are simply returned.  Thus, one could use the following to display the final exam date:
 
 ```erb 
-<code><%=&#160;$d.course.exam_dates.final.strftime("%A, %-d %B %Y")></code>
+<code><%= $d.course.exam_dates.final.strftime("%A, %-d %B %Y")></code>
 ```
 
 Note: Only directly nested hashes are converted to objects.
@@ -103,7 +103,11 @@ The values in the data file may be functions (i.e., Ruby Lambdas):
 }
 ```
 
-Referencing the key calls the function: `<%= $d.semester.full_name %>`
+Referencing the key calls the function: 
+
+```erb
+<%= $d.semester.full_name %>
+```
 
 Notice in the example above that other keys in the same hash may be referenced without qualification.  Keys in other objects can be referenced using the `root` method:
 
@@ -143,14 +147,14 @@ Parameter names will shadow (i.e., hide) keys in the local data object.  It is, 
 }
 ```
 
-Similarly, avoid using `root` as a variable name.  If that can't be avoided, you can reference the object hierarchy through `self.root`
+Similarly, avoid using `root` as a variable name.  If that can't be avoided, you can reference the object hierarchy through `self.root`.
 
 
 ### Data File Hierarchy
 
 `KielceRB` searches for multiple data files.  Specifically, it begins in the directory containing the source file and searches each ancestor directory for files matching the pattern `kielce_data*rb`.  The data in these files are merged into a single object hierarchy.  
 
-* If a key is used in multiple files, the value defined deepest in the hierarchy (i.e., closest to the template file) takes precedence.  (See the `SampleSite` directory for an example.)
+* If a key is used in multiple files, the value defined deepest in the hierarchy (i.e., closest to the template file) takes precedence.  Thus, you can place default values at the top of the hierarchy (e.g., in a root directory) and override those values as you get "closer" to the specific template file.  (See the `SampleSite` directory for an example.) 
 
 * If the same key appears in multiple files in the same directory (i.e., at the same level of the hierarchy), there is no guarantee which value will be used.  (Therefore, avoid including the same key in multiple files unless those files are in different directories.)
 
@@ -158,18 +162,27 @@ Similarly, avoid using `root` as a variable name.  If that can't be avoided, you
 
 ### Nesting Files
 
-You can use the `render` or `render_relative` method to include one file inside another.  For example, the main page for both courses in the included `SampleSite` display the professor's contact information by including the external file `Common/contactInfo.html.erb`. 
+You can use the `render` or `render_relative` method to include one file inside another.  For example, the main page for both courses in the included `SampleSite` example display the professor's contact information by including the external file `Common/contactInfo.html.erb`. 
 
 The template `cs101_index.html.erb` includes the contact info file directly: 
-`<%= $k.render_relative('../Common/contactInfo.html.erb')%>`; however, this approach is a bit fragile because if either teplate file is moved, the path won't be correct and will need to be updated.  A better approach is to put the filename in a variable. (See `cs202_index.html.erb`.) That way, if the contact info file ever moves, we need only update the variable. 
+
+````erb 
+<%= $k.render_relative('../Common/contactInfo.html.erb')%>`
+```
+
+However, this approach is somewhat fragile because if either template file is moved, the path will need to be updated.  A better approach is to put the filename in a variable. (See `cs202_index.html.erb`.) That way, if the contact info file ever moves, we need only update the variable. 
 
 The `render` method interprets the file name relative to the current working directory.  `render_relative` interprets the filename relative to the current file (`cs101_index.html.erb` in the case above).  I have found that `render` works best when given an absolute path name.  Notice that in `kielce_data_site.rb`, the `common_dir` value uses Ruby's `Kernel#__dir__` method to dynamically generate an absolute path name for use with `render`. Generating the path name dynamically means that we can move entire web site directory (e.g., `SampleSite`) without breaking any of the `render` calls.
 
-The `render` and `render_relative` methods optionally take a second parameter that is a hash of key/value pairs.  For example `<%= $k.render('fileToInclude.html.erb', { x: 'Hi', y: 'Mom'} %>`. 
+The `render` and `render_relative` methods optionally take a second parameter that is a hash of key/value pairs.  For example 
 
-**Important**: When rendering an included template, variables are resolved with respect to the *outermost* file (i.e., the one listed on the `kielce` command line).  In the `SampleSite` example, both `CS101/cs101_index.html.erb` and `CS202/cs202_index.html.erb` include `Common/contactInfo.html.erb`.  `contactInfo.html.erb` references the key `short_name`.  Notice that is the the value of `course.short_name` provided by the data file in `CS101/kielce_data_cs101.rb` or `CS202/kielce_data_cs202.rb`.  It does *not* use the value of `course.short_name` given in `Common/kielce_data_common.rb`.  If you want to use key/value pairs specific to the included template, you can 
+```erb 
+<%= $k.render('fileToInclude.html.erb', { x: 'Hi', y: 'Mom'} %>
+``` 
 
-1. Put the data directly in the erb file in a local variable
+**Important**: When rendering an included template, variables are resolved with respect to the *outermost* file (i.e., the one listed on the `kielce` command line).  In the `SampleSite` example, both `CS101/cs101_index.html.erb` and `CS202/cs202_index.html.erb` include `Common/contactInfo.html.erb`.  `contactInfo.html.erb` references the key `short_name`.  Notice that is the the value of `course.short_name` provided by the data file in `CS101/kielce_data_cs101.rb` or `CS202/kielce_data_cs202.rb` that appears in the output, *not* use the value of `course.short_name` given in `Common/kielce_data_common.rb`.  If you want to use key/value pairs specific to the included template, you can 
+
+1. Put the data directly in the erb file as a local variable
 2. Put the data in a `kielce_data*.rb` file that is in a common ancestor of both the "outer" and "inner" file.  (In the `SampleSite` example, we could put such data in the `SampleSite` directory because it is the root of both the included `contactInfo.html.erb` and the outer course pages.)
 
 ## Advanced Features
@@ -178,11 +191,20 @@ The `render` and `render_relative` methods optionally take a second parameter th
 
 ##  `Kielce` Methods
 
-`Kielce::Kielce` is the main class.  Running the script creates a singleton object of this type that is placed in the global variable `$k`.  `Kielce` provides the following public methods
+`Kielce::Kielce` is the main class.  The script creates a singleton object of this type that is placed in the global variable `$k`.  `Kielce` provides the following public methods:
 
 ### `link(url, link_text=nil, code: nil, classes: nil)`
 
-This method generates an anchor tag with the given URL and link text.  For example, `$k.link(`https://www.gatech.edu`, "Go, Jackets!")` returns `<a href='https://www.gatech.edu'>Go, Jackets!</a>`.  
+This method generates an anchor tag with the given URL and link text.  For example, 
+
+```ruby
+$k.link('https://www.gatech.edu', "Go, Jackets!")
+```		
+returns 
+
+```html 
+<a href='https://www.gatech.edu'>Go, Jackets!</a>
+```  
 
 If `link_text` is `nil`, then the URL is used as the link text and the link text is rendered in a fixed-width font.  For example, `$k.link('https://www.gvsu.edu')` returns `<a href='https://www.gvsu.edu'><code>https://www.gvsu.edu</code></a>`
 
