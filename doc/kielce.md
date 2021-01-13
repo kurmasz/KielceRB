@@ -233,7 +233,17 @@ will generate
 
 #### `link` Shortcut
 
-`KielceRB` adds a `link` method to the `String` class to make it easier to generate links.  This `link` method simply calls `Kielce#link`.  For example, to generate a link to `https://www.gvsu.edu` and have the URL as the link text, you can simply add this to the erb document: `<%= "https://www.gatech.edu".link %>`  Similarly, if you want to also specify the link text you can do this:  `<%= "https://www.gatech.edu".link('Go, Jackets!') %>`
+`KielceRB` adds a `link` method to the `String` class to make it easier to generate links.  This `link` method simply calls `Kielce#link`.  For example, to generate a link to `https://www.gvsu.edu` and have the URL as the link text, you can simply add this to the erb document: 
+
+```erb
+<%= "https://www.gatech.edu".link %>
+```  
+
+Similarly, if you want to also specify the link text you can do this:  
+
+```erb 
+<%= "https://www.gatech.edu".link('Go, Jackets!') %>
+```
 
 
 ### `render(file, local_variables)`
