@@ -259,6 +259,9 @@ The `render` and `render_relative` methods includes one .erb file inside another
 3. Avoid having function parameters with the same name as key values.
 4. Keys must be symbols. (They can't be strings, numbers, etc.)
 
+## Subtle, Nerdy Things
+
+* When loading and rendering, the same context object is used by default. That means that instance variables and methods set in one `kielce_data` file are available in other files as well as when rendering erb. However, a new Ruby binding is requested during each method call, so local variables set during one load/render are not available for subsequent loads/renders
 
 
 
