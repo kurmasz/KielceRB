@@ -1,0 +1,14 @@
+data_file_no_hash: Contains kielce_data file that doesn't return a hash
+
+dir1:  Files that use local variables only.  (No references to $d)
+
+dir2:  Files for testing 
+         (a) variables defined in data files in the same directory, and
+         (b) nested rendering (a .erb file that includes another erb file)
+       Subdirectories focus on nested rendering
+
+dir3:  Files for testing functions        
+
+dir4: Files for testing modules
+
+dir5:  Subdirectories contain KielceData files that will raise errors.        

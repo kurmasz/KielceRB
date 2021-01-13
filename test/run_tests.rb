@@ -1,4 +1,9 @@
 # Note:  Run this file from the directory above (i.e., the root of the project)
+# To run a specific file:
+#   ruby test/run_tests.rb system/command_line_test.rb (notice that test file name is given relative to the test directory, not the cwd)
+# To run a specific test
+#    ruby test/run_tests.rb --name=/quiet/  (notice the use of // for regexp)
+# https://test-unit.github.io/test-unit/en/Test/Unit/AutoRunner.html#run-instance_method
 
 # from https://test-unit.github.io/test-unit/en/file.how-to.html
 

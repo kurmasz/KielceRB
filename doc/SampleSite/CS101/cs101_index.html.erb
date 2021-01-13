@@ -1,0 +1,16 @@
+<html>
+<head>
+  <title><%= $d.course.full_name%></title>
+  <style>
+    <%= $k.render_relative('../Common/commonStyle.css') %>
+  </style>
+</head>  
+
+<body>
+<h1><%= $d.course.full_name %> <%= $d.semester.full_name %></h1>
+
+Welcome to <%= $d.course.short_name %>.  You will have lots of fun learning to program.
+
+<%= $k.render_relative('../Common/contactInfo.html.erb')%>
+</body>
+</html>

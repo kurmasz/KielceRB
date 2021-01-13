@@ -84,6 +84,19 @@ module Kielce
         exit 0
       end
 
+      # These INVALID_KEYS correspond to methods on the KielceData object.  
+      # These keys would be shadowed by these methods and produce strange errors.
+      # From a design perspective, I would prefer to do this check inside the KielceData class; but,
+      # at that point it's no longer possible to determine which file contained the invalid key.
+      # Thus, but repeating the check here, we can provide a better error message to the user.
+      INVALID_KEYS.each do |key|
+        if data.has_key?(key)
+          raise LoadingError, "ERROR: Data file #{file} uses the key \"#{key}\", which is not allowed."
+          exit 0
+        end
+      end
+
+
       # The deep_merge method will use the data from +data+ in the event of duplicate keys.
       # helpers.rb opens the Hash class and adds this method.
       x = current.deep_merge(data)

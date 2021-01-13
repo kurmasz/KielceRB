@@ -1,0 +1,4 @@
+To build the web pages for each course:
+
+From the CS101 directory: kielce cs101_index.html.erb > index.html
+From the CS202 directory: kielce cs202_index.html.erb > index.html

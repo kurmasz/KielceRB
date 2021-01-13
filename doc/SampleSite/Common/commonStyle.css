@@ -1,0 +1,11 @@
+#contact-info {
+  border: black 1px solid;
+  padding: 3px;
+  margin: 10px;
+  display:inline-block;
+}
+
+.ci-item {
+  display: block;
+  margin-left: 25px;
+}

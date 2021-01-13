@@ -19,6 +19,11 @@ module Kielce
   class NoKeyError < ::NameError
   end
 
+  class InvalidKeyError < ::NameError
+  end
+
+  INVALID_KEYS =  [:root, :method_missing, :inspect]
+
   # Access KielceData instance variables.
   # (We don't want public accessors on the KielceData object because the name
   # we choose may potentially conflict with user data.)
@@ -59,6 +64,11 @@ module Kielce
     end
 
     def initialize(data, root = nil, obj_name = nil)
+      
+      INVALID_KEYS.each do |key|
+        ::Kernel.send(:raise, InvalidKeyError.new("Invalid Key: #{key} may not be used as a key.", key)) if data.has_key?(key)
+      end
+
       @xx_kielce_obj_name = obj_name.nil? ? "" : obj_name
 
       @xx_kielce_data = data

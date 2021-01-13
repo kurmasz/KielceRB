@@ -12,6 +12,10 @@ require_relative "system_test_helper"
 class LoadingTest < Test::Unit::TestCase
   include SystemTestHelper
 
+#
+# Test file hierarchy
+#
+
   def test_internal_only
     (out, err, ev) = verify_kielce("dir1/internal_only.txt.erb", "",
                                    "Drive through Florida and Georgia.",
@@ -34,6 +38,23 @@ class LoadingTest < Test::Unit::TestCase
     (out, err, ev) = verify_kielce("dir1/unknown_local_variable.txt.erb", "", "",
                                    /dir1\/unknown_local_variable.txt.erb:5.*undefined local variable or method .not_a_var./, ERROR)
   end
+
+  def test_invalid_key
+    (out, err, ev) = verify_kielce("dir5/root_as_key/file1.txt.erb", "",
+                                   "",
+                                   /ERROR: Data file.*kielce_data_root_as_key.rb uses the key \"root\", which is not allowed./, ERROR)
+  end
+
+  # keys in kielce_data files should be symbols.  They won't work if they are strings.
+  def test_string_as_key
+    (out, err, ev) = verify_kielce("dir5/string_as_key/file1.txt.erb", "",
+                                   "",
+                                   /Unrecognized key lname at.*file1.txt.erb:1/, ERROR)
+  end
+
+#
+# Test the render method (including files in each other)
+#
 
   def test_nested_render
     expected_output = [
@@ -160,22 +181,83 @@ class LoadingTest < Test::Unit::TestCase
     (out, err, ev) = verify_kielce("dir2/dir2f/include_neighbor.txt.erb", "--quiet", expected_output, "", quiet: true)
   end
 
+  def test_passing_local_variables_to_included_file  
+    expected_output = [ 
+      "Outer file",
+      "Inner file",
+      "References Carter, Jimmy",
+      "Done",
+    ].join("\n")
+    (out, err, ev) = verify_kielce("dir2/outer_passes_local_to_render.txt.erb", "--quiet", expected_output, "", quiet: true)
+  end
+
+
   def test_end_of_chain
     expected_output = [
       "Val 1 is gamma",
-      "Val 2 is aleph",
+      "Val 2 is eta",
       "Val 3 is omega",
     ].join("\n")
     (out, err, ev) = verify_kielce("dir3/dir3a/dir3a1/dir3a1a/end_of_chain.txt.erb", "--quiet", expected_output, "", quiet: true)
   end
 
-  def test_function1
+#
+# Test functions (i.e., lambdas as values)
+#
+
+  # The tested function references only parameters (no data variables)
+  def test_function1_simple_with_params 
+    expected_output = [
+      "Testing a function that uses parameters only (it does not reference other variables)",
+      "Names:  Harry Dick Tom",
+    ].join("\n")
+    (out, err, ev) = verify_kielce("dir3/function1.txt.erb", "--quiet", expected_output, "", quiet: true)
+  end
+
+  # The tested function references only variables in the same object.
+  def test_function2_vars_same_object_L0
+    expected_output = [
+      "The quote: ->alpha<- to ->mu<- (L0)",
+      "Version 2: =>alpha<= to =>mu<= (L0)",
+    ].join("\n")
+    (out, err, ev) = verify_kielce("dir3/function2_L0.txt.erb", "--quiet", expected_output, "", quiet: true)
+  end
+
+  # The tested function references only variables in the same object. 
+  # Verifies that correct variables used (i.e., the one closest to the file being processed)
+  def test_function2_vars_same_object_L1
+    expected_output = [
+      "The quote: ->alpha<- to ->eta<- (L1)",
+      "Version B: =>alpha<= to =>eta<= (L1)",
+    ].join("\n")
+    (out, err, ev) = verify_kielce("dir3/dir3a/function2_L1.txt.erb", "--quiet", expected_output, "", quiet: true)
+  end
+
+  # The tested function references only variables in the same object. 
+  # Verifies that correct variables used (i.e., the one closest to the file being processed)
+  def test_function2_vars_same_object_L3 
     expected_output = [
       "The quote: ->gamma<- to ->omega<-",
       "Version 2: =>gamma<= to =>omega<=",
     ].join("\n")
-    (out, err, ev) = verify_kielce("dir3/dir3a/dir3a1/dir3a1a/function1.txt.erb", "--quiet", expected_output, "", quiet: true)
+    (out, err, ev) = verify_kielce("dir3/dir3a/dir3a1/dir3a1a/function2_L3.txt.erb", "--quiet", expected_output, "", quiet: true)
   end
+
+  # The tested function references variables in a sibling object
+  # (i.e., verifies that 'root' works as expected)
+  def test_function3_vars_sibling_object_L0
+    expected_output = [
+      "The quote: ->aleph<- to ->gimmel<- (L0 other)",
+      "Version 2: =>aleph<= to =>gimmel<= (L0 other)",
+    ].join("\n")
+    (out, err, ev) = verify_kielce("dir3/function3_L0.txt.erb", "--quiet", expected_output, "", quiet: true)
+  end
+
+
+#
+# Test module loading
+#
+
 
   def test_module_load1 # module is loaded using require_relative with a single, constant string
     expected_output = [

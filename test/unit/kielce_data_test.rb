@@ -133,6 +133,52 @@ class KielceDataTest < Test::Unit::TestCase
     end
   end
 
+  def test_key_named_root_raises_exception
+    input = {
+      fname: 'john',
+      lname: 'adams',
+      root: 'carrot',
+    }
+    
+    begin
+      data = Kielce::KielceData.new(input)
+      assert false, "Should raise InvalidKeyError"
+    rescue Kielce::InvalidKeyError => e
+      assert_equal :root, e.name
+    end
+  end
+
+  def test_key_named_inspect_raises_exception
+    input = {
+      fname: 'john',
+      lname: 'adams',
+      inspect: 'carrot',
+    }
+    
+    begin
+      data = Kielce::KielceData.new(input)
+      assert false, "Should raise InvalidKeyError"
+    rescue Kielce::InvalidKeyError => e
+      assert_equal :inspect, e.name
+    end
+  end
+
+
+  def test_key_named_method_missing_raises_exception
+    input = {
+      fname: 'john',
+      lname: 'adams',
+      method_missing: 'carrot',
+    }
+    
+    begin
+      data = Kielce::KielceData.new(input)
+      assert false, "Should raise InvalidKeyError"
+    rescue Kielce::InvalidKeyError => e
+      assert_equal :method_missing, e.name
+    end
+  end
+
   def test_proc_zero_params
     x = 1
     y = 2
