@@ -2,7 +2,7 @@
 
 `KielceRB` is a highly customizable templating engine for generating assignments, syllabi, web pages and other course documents.  It loads a hierarchy of key-value pairs from files at various file system levels.  These values can then be inserted into documents using Ruby's ERB templating engine. `KielceRB` simplifies the maintenance of course documents by moving data that changes regularly into external data files where they can be easily identified and updated.  By loading data from various file system levels, it is easy to share values among all documents for a particular course and/or semester. 
 
-`KielceRB` also provides a method for including one document inside another allowing users to easily share common content among several pages (navigation bars, contact information, assignment headers, etc.).
+`KielceRB` also provides methods for including one document inside another allowing users to easily share common content among several pages (navigation bars, contact information, assignment headers, etc.).
 
 ## Simple Example
 
@@ -37,7 +37,7 @@ The simplest use case is:
 
 ### Hierarchical data
 
-The values in the data files can any type of Ruby object (including nested Hashes)
+The values in the data files can be any type of Ruby object (including nested Hashes).
 
 ```ruby 
 {
@@ -61,10 +61,17 @@ The values in the data files can any type of Ruby object (including nested Hashe
 }
 ```
 
-Nested hashes are converted into objects just as the root hash is.  Thus, the syntax for accessing the term is `<%= $d.semester.term %>`.  
+Nested hashes are converted into objects just as the root hash is.  Thus, the syntax for accessing the `term` value is 
 
-Objects that are not hashes are simply returned.  Thus, one could use the following to display the final exam date: 
+```erb 
+<%= $d.semester.term %>`
+```
+
+Objects that are not hashes are simply returned.  Thus, one could use the following to display the final exam date:
+
+```erb 
 <code><%=&#160;$d.course.exam_dates.final.strftime("%A, %-d %B %Y")></code>
+```
 
 Note: Only directly nested hashes are converted to objects.
 
@@ -197,6 +204,9 @@ The `render` and `render_relative` methods includes one .erb file inside another
 
 
 1. Don't use `root`, `inspect`, or `method_missing` as key names.
+2. Don't use a key name in multiple files in the same directory.  (Using the same key name in different directories is fine --- and, in fact, potentially useful for setting default values.)
+3. Avoid having function parameters with the same name as key values.
+4. Keys must be symbols. (They can't be strings, numbers, etc.)
 
 
 
