@@ -166,7 +166,7 @@ You can use the `render` or `render_relative` method to include one file inside 
 
 The template `cs101_index.html.erb` includes the contact info file directly: 
 
-````erb 
+```erb 
 <%= $k.render_relative('../Common/contactInfo.html.erb')%>`
 ```
 
@@ -206,11 +206,30 @@ returns
 <a href='https://www.gatech.edu'>Go, Jackets!</a>
 ```  
 
-If `link_text` is `nil`, then the URL is used as the link text and the link text is rendered in a fixed-width font.  For example, `$k.link('https://www.gvsu.edu')` returns `<a href='https://www.gvsu.edu'><code>https://www.gvsu.edu</code></a>`
+If `link_text` is `nil`, then the URL is used as the link text and the link text is rendered in a fixed-width font.  For example, 
 
-Setting `code` to true renders the link text in a fixed-width font (as shown in the example above).  The default is to print the link text in a normal font.
+```ruby
+$k.link('https://www.gvsu.edu')
+```
+ 
+ returns 
+ 
+ ```html 
+ <a href='https://www.gvsu.edu'><code>https://www.gvsu.edu</code></a>
+ ```
 
-The string passed to `classes` is the value for the `class` attribute on the anchor tag.  `$k.link('https://www.gatech.edu', "Go, Jackets!", classes: 'important')` will generate `<a href='https://www.gatech.edu' class='important'>Go, Jackets!</a>`
+Setting `code` to `true` renders the link text in a fixed-width font (as shown in the example above).  The default is to print the link text in a normal font.
+
+The string passed to `classes` is the value for the `class` attribute on the anchor tag.  
+
+```ruby 
+$k.link('https://www.gatech.edu', "Go, Jackets!", classes: 'important')
+``` 
+will generate 
+
+```html 
+<a href='https://www.gatech.edu' class='important'>Go, Jackets!</a>
+```
 
 #### `link` Shortcut
 
