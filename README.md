@@ -4,6 +4,8 @@
 
 `KielceRB` also provides methods for including one document inside another allowing users to easily share common content among several pages (navigation bars, contact information, assignment headers, etc.).
 
+`KielceRB` is a [[https://rubygems.org/gems/kielce Ruby Gem]].  To install, simply run `gem install kielce`.  (You can also download the code from GitHub and run directly from the repo.)
+
 ## Simple Example
 
 Data files are Ruby files that return a hash containing key-value pairs. The names of these files must mach the pattern `kielce_data*.rb`.
