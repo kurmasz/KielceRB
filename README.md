@@ -4,7 +4,7 @@
 
 `KielceRB` also provides methods for including one document inside another allowing users to easily share common content among several pages (navigation bars, contact information, assignment headers, etc.).
 
-`KielceRB` is a [Ruby Gem](https://rubygems.org/gems/kielce Ruby Gem).  To install, simply run `gem install kielce`.  (You can also download the code from GitHub and run directly from the repo.)
+`KielceRB` is a [Ruby Gem](https://rubygems.org/gems/kielce).  To install, simply run `gem install kielce`.  (You can also download the code from GitHub and run directly from the repo.)
 
 ## Simple Example
 
