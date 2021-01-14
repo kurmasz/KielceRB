@@ -6,6 +6,7 @@
 # (c) 2020 Zachary Kurmas
 ##############################################################################################
 
+require 'stringio'
 require "test/unit"
 require_relative "unit_test_helper"
 require "kielce"
