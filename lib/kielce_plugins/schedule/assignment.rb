@@ -52,7 +52,7 @@ module KielcePlugins
 
         # build a link, if a link provided
         (linked && !@link.nil?) ?  "<a href='#{@link}'>#{text}</a>" : text
-      end
-    end
-  end
-end
+      end # title
+    end # class Assignment
+  end # module Schedule
+end # module KielcePlugins

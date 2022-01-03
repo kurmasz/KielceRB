@@ -13,7 +13,7 @@ module KielcePlugins
 
       attr_accessor :assignments, :schedule_days
 
-      def initialize(filename)
+      def initialize(filename)       
         workbook = RubyXL::Parser.parse(filename)
         @assignments = build_assignments(build_rows(workbook['Assignments'], Assignment::ASSIGNMENT_KEYS))
         @schedule_days = build_schedule_days(build_rows(workbook['Schedule'], SCHEDULE_KEYS))
@@ -27,7 +27,7 @@ module KielcePlugins
             "<a href='#{$1}'>#{text}</a>"
           end
 
-          value.gsub!(/<<(assign|due)\s+(\S.+)>>/) do
+          value.gsub!(/<<(assign|due|ref)\s+(\S.+)>>/) do
             #$stderr.puts "Found assignment ref #{$1} --- #{$2} -- #{@assignments[$2].inspect}"
             $stderr.puts "Assignment #{$2} not found" unless @assignments.has_key?($2)
 
@@ -36,6 +36,8 @@ module KielcePlugins
               "Assign #{text}"
             elsif $1 == 'due'
               "<b>Due</b> #{text}"
+            elsif $1 == 'ref'
+              text
             else
               $stderr.puts "Unexpected match #{$1}"
             end
@@ -50,7 +52,7 @@ module KielcePlugins
                 param = $2
              
                 method = 'default' if method.empty?  
-                #$stderr.puts "Found link rule  =>#{method}<= #{method.empty?} =>#{param}<="
+                # $stderr.puts "Found link rule  =>#{method}<= #{method.empty?} =>#{param}<="
 
                 link = $d.course.notesTemplates.method_missing(method, param)                
               else
