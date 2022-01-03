@@ -27,7 +27,7 @@ module KielcePlugins
             "<a href='#{$1}'>#{text}</a>"
           end
 
-          value.gsub!(/<<(assign|due|ref)\s+(\S.+)>>/) do
+          value.gsub!(/<<(assign|due|ref)\s+(\S.+?)>>/) do
             #$stderr.puts "Found assignment ref #{$1} --- #{$2} -- #{@assignments[$2].inspect}"
             $stderr.puts "Assignment #{$2} not found" unless @assignments.has_key?($2)
 

@@ -1,9 +1,9 @@
 Gem::Specification.new do |s|
   s.name        = 'kielce'
-  s.version     = '2.0.1'
+  s.version     = '2.0.3'
   s.executables  << 'kielce'
 
-  s.date        = '2021-01-13'
+  s.date        = '2022-01-03'
   s.summary     = "An ERB-based templating engine for generating course documents."
   s.description = "An ERB-based templating engine for generating course documents. "
   s.authors     = ["Zachary Kurmas"]

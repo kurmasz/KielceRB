@@ -1,0 +1,2 @@
+gem build kielce.gemspec 
+gem push kielce-2.0.2.gem 
