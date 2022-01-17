@@ -24,7 +24,7 @@ module KielcePlugins
           # Replace link markup
           value.gsub!(/\[\[([^\s]+)(\s+(\S.*)|\s*)\]\]/) do
             text = $3.nil? ? "<code>#{$1}</code>" : $3
-            "<a href='#{$1}'>#{text}</a>"
+            "<a target='_blank' href='#{$1}'>#{text}</a>"
           end
 
           value.gsub!(/<<(assign|due|ref)\s+(\S.+?)>>/) do
@@ -58,7 +58,7 @@ module KielcePlugins
               else
                 link = link_rule
               end                            
-              "(<a href='#{link}'>#{text}</a>)"
+              "(<a target='_blank' href='#{link}'>#{text}</a>)"
           end # end gsub
 
         end # end if value is string

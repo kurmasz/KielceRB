@@ -51,7 +51,7 @@ module KielcePlugins
         end
 
         # build a link, if a link provided
-        (linked && !@link.nil?) ?  "<a href='#{@link}'>#{text}</a>" : text
+        (linked && !@link.nil?) ?  "<a target='_blank' href='#{@link}'>#{text}</a>" : text
       end # title
     end # class Assignment
   end # module Schedule

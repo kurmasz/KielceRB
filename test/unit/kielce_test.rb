@@ -74,4 +74,26 @@ class KielceTest < Test::Unit::TestCase
     observed = @k.link('http://short.com', classes: 'a b c', code: false)
     assert_equal "<a href='http://short.com' class='a b c'>http://short.com</a>", observed
   end
+
+  def test_target_blank_str
+    observed = @k.link('http://short.com', target: '_blank')
+    assert_equal "<a target='_blank' href='http://short.com'><code>http://short.com</code></a>", observed
+  end
+
+  def test_class_list_with_target_top_str
+    observed = @k.link('http://short.com', classes: 'a b e', target: '_top')
+    assert_equal "<a target='_top' href='http://short.com' class='a b e'><code>http://short.com</code></a>", observed
+  end
+
+  def test_target_blank_sym
+    observed = @k.link('http://short.com', target: :blank)
+    assert_equal "<a target='_blank' href='http://short.com'><code>http://short.com</code></a>", observed
+  end
+
+  def test_class_list_with_target_top_sym
+    observed = @k.link('http://short.com', classes: 'a b e', target: :top)
+    assert_equal "<a target='_top' href='http://short.com' class='a b e'><code>http://short.com</code></a>", observed
+  end
+
+
 end

@@ -38,7 +38,7 @@ module Kielce
     #
     # This could be a class method.  We make it
     # an instance method so it can be used using the "$k.link" syntax.
-    def link(url, text_param = nil, code: nil, classes: nil)
+    def link(url, text_param = nil, code: nil, classes: nil, target: nil)
       class_list = classes.nil? ? "" : " class='#{classes}'"
 
       # Make the text the same as the URL if no text given
@@ -47,7 +47,15 @@ module Kielce
       # use <code> if either (1) user requests it, or (2) no text_param given and no code param given
       text = "<code>#{text}</code>" if code || (text_param.nil? && code.nil?)
 
-      "<a href='#{url}'#{class_list}>#{text}</a>"
+      if target.nil?
+        target_str = ''
+      else
+        target = "_#{target.to_s}" if target.is_a?(Symbol)
+        # NOTE:  Space at the end of target_str is important
+        target_str = "target='#{target}' " unless target.nil?
+      end 
+    
+      "<a #{target_str}href='#{url}'#{class_list}>#{text}</a>"
     end
 
     # Load +file+ and run ERB.  The binding parameter determines

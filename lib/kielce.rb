@@ -14,7 +14,12 @@ require "kielce/kielce"
 ##############################################################################################
 
 module Kielce
-  VERSION = "2.0.3"
+  VERSION = "2.0.4"
+
+  # Changelog
+  #
+  # 2.0.4:  Added a "target" option to "link", and made the timeline links open in a new tab.
+
 
   def self.run
 

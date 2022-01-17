@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'kielce'
-  s.version     = '2.0.3'
+  s.version     = '2.0.4'
   s.executables  << 'kielce'
 
   s.date        = '2022-01-03'
