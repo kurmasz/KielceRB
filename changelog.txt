@@ -1,0 +1,2 @@
+2.0.5:
+    Modified calls to ERB.new to remove warnings.

@@ -100,7 +100,7 @@ module Kielce
       @@render_count += 1
 
       begin
-        erb = ERB.new(content, nil, nil, "render_out_#{@@render_count}")
+        erb = ERB.new(content, eoutvar: "render_out_#{@@render_count}")
         erb.filename = file.to_s
         result = erb.result(b)
       rescue NoKeyError => e
