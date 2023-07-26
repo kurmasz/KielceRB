@@ -1,2 +1,8 @@
+2.0.7:
+    Added a static version of the instance method Kielce#link.
+
+2.0.6:
+    Added the ability to hide {notes: } link by prefixing with {xxnotes: }
+
 2.0.5:
     Modified calls to ERB.new to remove warnings.

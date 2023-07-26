@@ -57,8 +57,9 @@ module KielcePlugins
                 link = $d.course.notesTemplates.method_missing(method, param)                
               else
                 link = link_rule
-              end                            
-              "(<a target='_blank' href='#{link}'>#{text}</a>)"
+              end                 
+              # Suppress links if text begins with xx.           
+              text =~ /^xx/ ? '': "(<a target='_blank' href='#{link}'>#{text}</a>)"
           end # end gsub
 
         end # end if value is string

@@ -53,8 +53,8 @@ module Kielce
       # (2) The second parameter to eval, the "binding", is an object
       #     describing the context the code being evaluated will run in.
       #     Among other things, this context determines the local variables
-      #     and methods avaiable to the code being evaluated.  In order to
-      #     prevent data files from manipuating this KielceLoader object this 
+      #     and methods available to the code being evaluated.  In order to
+      #     prevent data files from manipulating this KielceLoader object this 
       #     method's local variables, we create an empty object and use its 
       #     binding. Note, however, that the code can still read and set global 
       #     variables. Users can also provide a different, custom, context object.
@@ -106,7 +106,7 @@ module Kielce
 
     #
     # Search +dir+ and all parent directories for kielce data files, load them, and
-    # return the raw Hash containing the collective datqa.
+    # return the raw Hash containing the collective data.
     #
     # @param dir the directory to search (as a +Pathname+ object)
     # @param current the current data object

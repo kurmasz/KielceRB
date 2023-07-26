@@ -8,13 +8,13 @@
 
 class ::String
   def link(text = nil)
-    $k.link(self, text)
+    Kielce::Kielce.link(self, text)
     #%Q(<a href="#{self}">#{text}</a>)
   end
 end
 
 class ::Hash
-  # Merges two hashes recursively.  Specificaly, if the value of one item in the hash is itself a hash,
+  # Merges two hashes recursively.  Specifically, if the value of one item in the hash is itself a hash,
   # merge that nested hash.
   #
   # Hash#merge by default returns a new Hash containing the key/value pairs of both hashes.

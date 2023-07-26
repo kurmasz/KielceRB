@@ -35,10 +35,7 @@ module Kielce
     end
 
     # Generate an +href+ tag.
-    #
-    # This could be a class method.  We make it
-    # an instance method so it can be used using the "$k.link" syntax.
-    def link(url, text_param = nil, code: nil, classes: nil, target: nil)
+    def self.link(url, text_param = nil, code: nil, classes: nil, target: nil)
       class_list = classes.nil? ? "" : " class='#{classes}'"
 
       # Make the text the same as the URL if no text given
@@ -56,6 +53,11 @@ module Kielce
       end 
     
       "<a #{target_str}href='#{url}'#{class_list}>#{text}</a>"
+    end
+
+    # We add instance method so it can be used using the "$k.link" syntax.
+    def link(*args, **kwargs) 
+      Kielce.link(*args, **kwargs)
     end
 
     # Load +file+ and run ERB.  The binding parameter determines
@@ -95,7 +97,7 @@ module Kielce
       # another erb template.  In order for such nested calls to work
       # properly, each call must have a unique variable in which to
       # store its output.  This parameter is called "eoutvar". (If you
-      # don't specifiy eoutvar and make a nested call, the output
+      # don't specify eoutvar and make a nested call, the output
       # can get messed up.)
       @@render_count += 1
 

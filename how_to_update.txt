@@ -1,2 +1,4 @@
+# Change version in *BOTH* gemspec and the kielce executable
+
 gem build kielce.gemspec 
-gem push kielce-2.0.5.gem 
+gem push kielce-2.0.7.gem 
