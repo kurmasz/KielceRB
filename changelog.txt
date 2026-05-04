@@ -1,3 +1,6 @@
+2.0.8:
+   Added features to the Schedule plug-in
+
 2.0.7:
     Added a static version of the instance method Kielce#link.
 

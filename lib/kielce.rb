@@ -14,12 +14,12 @@ require "kielce/kielce"
 ##############################################################################################
 
 module Kielce
-  VERSION = "2.0.7"
+  VERSION = "2.0.8"
 
   # Changelog
   #
+  # 2.0.8:  Changed how missing schedule items are reported.
   # 2.0.4:  Added a "target" option to "link", and made the timeline links open in a new tab.
-
 
   def self.run
 
@@ -72,7 +72,7 @@ module Kielce
       context = Object.new
       $d = KielceLoader.load(file, context: context)
       $k = Kielce.new(context)
-      result = $k.render(file) 
+      result = $k.render(file)
       puts result if $k.error_count == 0
     rescue LoadingError => e
       $stderr.puts e.message

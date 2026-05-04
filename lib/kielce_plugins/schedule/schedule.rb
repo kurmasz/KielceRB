@@ -1,11 +1,10 @@
-require 'rubyXL'
-require_relative 'assignment'
+require "rubyXL"
+require_relative "assignment"
 
 # https://www.ablebits.com/office-addins-blog/2015/03/11/change-date-format-excel/
 
 module KielcePlugins
   module Schedule
-
     class Schedule
 
       #SCHEDULE_KEYS = [:week, :date, :topics, :notes, :reading, :milestones, :comments]
@@ -13,13 +12,13 @@ module KielcePlugins
 
       attr_accessor :assignments, :schedule_days
 
-      def initialize(filename)       
+      def initialize(filename)
         workbook = RubyXL::Parser.parse(filename)
-        @assignments = build_assignments(build_rows(workbook['Assignments'], Assignment::ASSIGNMENT_KEYS))
-        @schedule_days = build_schedule_days(build_rows(workbook['Schedule'], SCHEDULE_KEYS))
+        @assignments = build_assignments(build_rows(workbook["Assignments"], Assignment::ASSIGNMENT_KEYS))
+        @schedule_days = build_schedule_days(build_rows(workbook["Schedule"], SCHEDULE_KEYS))
       end
 
-      def transform(value)
+      def transform(value, rowDate, end_of_semester)
         if value.is_a? String
           # Replace link markup
           value.gsub!(/\[\[([^\s]+)(\s+(\S.*)|\s*)\]\]/) do
@@ -29,14 +28,17 @@ module KielcePlugins
 
           value.gsub!(/<<(assign|due|ref)\s+(\S.+?)>>/) do
             #$stderr.puts "Found assignment ref #{$1} --- #{$2} -- #{@assignments[$2].inspect}"
-            $stderr.puts "Assignment #{$2} not found" unless @assignments.has_key?($2)
+            unless @assignments.has_key?($2)
+              $stderr.puts "Assignment #{$2} not found"
+              exit(1)
+            end
 
             text = @assignments[$2].title(:full, true)
-            if $1 == 'assign'
+            if $1 == "assign"
               "Assign #{text}"
-            elsif $1 == 'due'
+            elsif $1 == "due"
               "<b>Due</b> #{text}"
-            elsif $1 == 'ref'
+            elsif $1 == "ref"
               text
             else
               $stderr.puts "Unexpected match #{$1}"
@@ -44,29 +46,36 @@ module KielcePlugins
           end # end gsub!
 
           value.gsub!(/{{([^{}:]+):\s*([^{}]+)}}/) do
-              text = $1
-              link_rule = $2
+            text = $1
+            link_rule = $2
+            # $stderr.puts "Processing text #{text} with link rule #{link_rule}"
 
-              if (link_rule =~ /(.*)\!(.+)/)
-                method = $1
-                param = $2
-             
-                method = 'default' if method.empty?  
-                # $stderr.puts "Found link rule  =>#{method}<= #{method.empty?} =>#{param}<="
+            if (link_rule =~ /(.*)\!(.+)/)
+              method = $1
+              param = $2
 
-                link = $d.course.notesTemplates.method_missing(method, param)                
-              else
-                link = link_rule
-              end                 
-              # Suppress links if text begins with xx.           
-              text =~ /^xx/ ? '': "(<a target='_blank' href='#{link}'>#{text}</a>)"
+              method = "default" if method.empty?
+              # $stderr.puts "Found link rule  =>#{method}<= #{method.empty?} =>#{param}<="
+
+              link = $d.course.notesTemplates.method_missing(method, param)
+            else
+              link = link_rule
+            end
+
+            # Don't provide links to notes if we haven't gone through those notes in lecture yet.
+            suppress = text =~ /^xx/ || (text=~ /^td_/ && (rowDate >= Date.today - 3 || Date.today >= end_of_semester))
+            text = text.gsub(/^td_/, "")
+
+            # Suppress links if text begins with xx.
+            suppress ? "" : "(<a target='_blank' href='#{link}'>#{text}</a>)"
           end # end gsub
-
         end # end if value is string
         value
       end
 
       def build_rows(worksheet, keys)
+        row_date = nil
+      end_of_semester = nil 
         # Remove the first (header) row, and any empty rows.
         # Also, remove any rows after "END"
         first = true
@@ -74,6 +83,12 @@ module KielcePlugins
         rows = []
         worksheet.each do |row|
           done = true if !row.nil? && !row[0].nil? && row[0].value == "END"
+
+          if !row.nil? && !row[0].nil? &&  row[0].value.is_a?(String) && (row[0].value =~ /^EO(T|S)$/)
+            end_of_semester = row[1].value
+            $stderr.puts "Found end of semester marker: #{end_of_semester}"
+          end
+
 
           unless first || row.nil? || done
             rows << row
@@ -85,8 +100,9 @@ module KielcePlugins
         rows.map do |row|
           row_hash = { original: {} }
           keys.each_with_index do |item, index|
+            row_date = row[index].value if item == :date && !row[index].nil? && !row[index].value.nil?
             row_hash[:original][item] = row[index].nil? ? nil : row[index].value
-            row_hash[item] = row[index].nil? ? nil : transform(row[index].value)
+            row_hash[item] = row[index].nil? ? nil : transform(row[index].value, row_date, end_of_semester)
           end
           row_hash
         end # end map
@@ -114,7 +130,7 @@ module KielcePlugins
 
             # create a new schedule_day Hash
             schedule_day = {
-              begin_week: false
+              begin_week: false,
             }
 
             unless row[:week].nil?
@@ -128,18 +144,18 @@ module KielcePlugins
           end
 
           # push non-nil values onto the corresponding array
-         # array_keys.each { |key| schedule_day[key] << row[key] unless row[key].nil? }
-         array_keys.each do |key| 
-          val = row[key]
+          # array_keys.each { |key| schedule_day[key] << row[key] unless row[key].nil? }
+          array_keys.each do |key|
+            val = row[key]
 
-          # skip any completely empty cells (they produce a value of nil)
-          # Replace a single period with a whitespace.  (Thus producing an empty cell in the table)
-          # Similarly, treat cells beginnign with // as a comment and produce an empty cell in the table)
-          unless row[key].nil? 
-            val = "&nbsp;" if val == '.' || val =~ /^\s*\/\//
-            schedule_day[key] << val 
+            # skip any completely empty cells (they produce a value of nil)
+            # Replace a single period with a whitespace.  (Thus producing an empty cell in the table)
+            # Similarly, treat cells beginnign with // as a comment and produce an empty cell in the table)
+            unless row[key].nil?
+              val = "&nbsp;" if val == "." || val =~ /^\s*\/\//
+              schedule_day[key] << val
+            end
           end
-         end
 
           # Look for assignments / due dates and add information to @assignment objects
           original_milestones = row[:original][:milestones]
@@ -177,19 +193,19 @@ TABLE
 
         first = true
         @schedule_days.each do |schedule_day|
-          table << '<tr>'
+          table << "<tr>"
 
           if schedule_day[:begin_week]
             unless first
               # Add a blank row of horizontal lines
-              table << '<td></td><td></td><td></td><td></td><td></td><td></td></tr>'
+              table << "<td></td><td></td><td></td><td></td><td></td><td></td></tr>"
               table << "<tr class='week_end'><td></td><td></td><td></td><td></td><td></td><td></td></tr>"
-              table << '<tr>'
+              table << "<tr>"
             end
             first = false
             week_value = schedule_day[:week]
           else
-            week_value = ''
+            week_value = ""
           end
 
           table << "  <td class='week_column'>#{week_value}</td>"
@@ -274,7 +290,6 @@ PAGE
 STYLE
       end
 
-
       def assignment_list
         list = <<TABLE
     <table class='kielceAssignmentTable'>
@@ -285,9 +300,9 @@ STYLE
       </tr>
 TABLE
 
-        by_date = @assignments.values.reject { |item| item.due.nil? || item.type == 'Lab' }.sort_by { |a| a.due }
+        by_date = @assignments.values.reject { |item| item.due.nil? || item.type == "Lab" }.sort_by { |a| a.due }
         by_date.each do |assignment|
-          list += '  <tr>'
+          list += "  <tr>"
           list += "    <td class='kielceAssignmentTable_due'>#{assignment.due.strftime("%a. %-d %b.")}</td>\n"
           list += "    <td class='kielceAssignmentTable_title'>#{assignment.title(:full, true)}</td>\n"
           list += "    <td class='kielceAssignmentTable_details'>#{assignment.details}</td>\n"
@@ -305,10 +320,10 @@ TABLE
          <th>Details</th>
       </tr>
 TABLE
-        assigned_labs = @assignments.values.select { |item| item.type == 'Lab' && !item.assigned.nil? }
+        assigned_labs = @assignments.values.select { |item| item.type == "Lab" && !item.assigned.nil? }
         by_date = assigned_labs.sort { |a, b| a.assigned <=> b.assigned }
         by_date.each do |assignment|
-          list += '  <tr>'
+          list += "  <tr>"
           list += "    <td class='kielceAssignmentTable_due'>#{assignment.assigned.strftime("%a. %-d %b.")}</td>\n"
           list += "    <td class='kielceAssignmentTable_title'>#{assignment.title(:full, true)}</td>\n"
           list += "    <td class='kielceAssignmentTable_details'>#{assignment.details}</td>\n"
@@ -317,7 +332,7 @@ TABLE
         list += "</table>\n"
         list
       end
-  end # end Schedule
-end # module
+    end # end Schedule
+  end # module
 end # end KielcePlugins
 #puts Schedule.new(ARGV[0]).timeline_page

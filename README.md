@@ -1,6 +1,6 @@
 # KielceRB
 
-`KielceRB` is a highly customizable templating engine for generating assignments, syllabi, web pages and other course documents.  It loads a hierarchy of key-value pairs from files at various file system levels.  These values can then be inserted into documents using Ruby's ERB templating engine. `KielceRB` simplifies the maintenance of course documents by moving data that changes regularly into external data files where they can be easily identified and updated.  By loading data from various file system levels, it is easy to share values among all documents for a particular course and/or semester. 
+`KielceRB` is a highly customizable templating engine for generating assignments, syllabi, web pages and other course documents.  It loads a hierarchy of key-value pairs from files at various file system levels.  These values can then be inserted into documents using Ruby's ERB templating engine. `KielceRB` simplifies the maintenance of course documents by moving data that change regularly into external data files where they can be easily identified and updated.  By loading data from various file system levels, it is easy to share values among all documents for a particular course and/or semester. 
 
 `KielceRB` also provides methods for including one document inside another allowing users to easily share common content among several pages (navigation bars, contact information, assignment headers, etc.).
 
