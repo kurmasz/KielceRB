@@ -30,8 +30,8 @@ module Kielce
     OptionParser.new do |opts|
       opts.banner = "Usage: kielce [options]"
 
-      opts.on("-q", "--[no-]quiet", "Run quietly") do |q|
-        options[:quiet] = q
+      opts.on("-q", "--quiet", "Run quietly") do
+        options[:quiet] = true
       end
     end.parse!
 
