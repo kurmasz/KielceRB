@@ -13,14 +13,9 @@ require "kielce/kielce"
 #
 ##############################################################################################
 
+require_relative "kielce/version"
+
 module Kielce
-  VERSION = "2.0.8"
-
-  # Changelog
-  #
-  # 2.0.8:  Changed how missing schedule items are reported.
-  # 2.0.4:  Added a "target" option to "link", and made the timeline links open in a new tab.
-
   def self.run
 
     # TODO:
