@@ -1,0 +1,37 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "KielceRB"
+abstract: "A highly customizable templating engine for generating assignments, syllabi, web pages, and other course documents."
+authors:
+  - family-names: "Kurmas"
+    given-names: "Zachary"
+    affiliation: "Grand Valley State University"
+    orcid: "https://orcid.org/0009-0002-2074-2522"
+license: MIT
+repository-code: "https://github.com/kurmasz/KielceRB"
+url: "https://github.com/kurmasz/KielceRB"
+keywords:
+  - ruby
+  - erb
+  - templating
+  - course-management
+  - education
+
+preferred-citation:
+  type: article
+  authors:
+    - family-names: "Kurmas"
+      given-names: "Zachary"
+      affiliation: "Grand Valley State University"
+      email: "kurmasz@gvsu.edu"
+      orcid: "https://orcid.org/0009-0002-2074-2522"
+  title: "KielceRB: A highly customizable templating engine for course documents"
+  journal: "Journal of Computing Sciences in Colleges"
+  volume: 36
+  issue: 4
+  year: 2020
+  month: 10
+  publisher:
+    name: "Consortium for Computing Sciences in Colleges"
+  url: "https://kurmasgvsu.github.io/papers/kielce_kurmas.pdf"
+
